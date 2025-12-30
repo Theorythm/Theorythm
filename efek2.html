@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elegant Portofolio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg-gradient: linear-gradient(135deg, #000 0%, #808080 100%);
+    --text-color: #fff;
+    --nav-bg: rgba(0,0,0,.9);
+    --card-bg: rgba(255,255,255,.1);
+}
+
+[data-theme="light"] {
+    --bg-gradient: linear-gradient(135deg, #f0f0f0 0%, #d0d0d0 100%);
+    --text-color: #222;
+    --nav-bg: rgba(255,255,255,.9);
+    --card-bg: rgba(0,0,0,.1);
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    transition: background .5s, color .5s;
+    overflow-x: hidden;
+}
+
+/* NAVBAR */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1rem 2rem;
+    background: var(--nav-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li { margin-right: 1.5rem; }
+
+nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color .3s;
+}
+
+nav a:hover, nav a:focus {
+    color: #888;
+}
+
+/* THEME TOGGLE */
+#theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: color .3s;
+}
+
+#theme-toggle:hover, #theme-toggle:focus {
+    color: #888;
+}
+
+#theme-toggle svg {
+    width: 28px;
+    height: 28px;
+    stroke: currentColor;
+    fill: none;
+}
+
+/* SECTION */
+section {
+    height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: 1s ease;
+}
+
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* PARALLAX */
+.parallax {
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(100%);
+}
+
+@media(max-width:768px){
+    .parallax { background-attachment: scroll; }
+}
+
+/* BACKGROUNDS */
+.home { background-image:url('https://source.unsplash.com/featured/?anime,city'); }
+.about { background-image:url('https://source.unsplash.com/featured/?anime,portrait'); }
+.portofolio { background-image:url('https://source.unsplash.com/featured/?anime,art'); }
+.services { background-image:url('https://source.unsplash.com/featured/?anime,technology'); }
+.contact { background-image:url('https://source.unsplash.com/featured/?anime,nature'); }
+
+/* TYPING */
+.typing {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid currentColor;
+    animation: blink-caret 1s step-end infinite;
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: currentColor; }
+}
+
+h1, h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* TEXT */
+p {
+    max-width: 600px;
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: 1s ease;
+}
+
+p.animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* PORTOFOLIO HORIZONTAL */
+.portofolio-container {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding: 1rem;
+    max-width: 90vw;
+    scroll-snap-type: x mandatory;
+}
+
+.portofolio-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.portofolio-container::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.4);
+    border-radius: 10px;
+}
+
+.portofolio-item {
+    min-width: 280px;
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 10px;
+    transition: transform .3s, box-shadow .3s;
+    scroll-snap-align: start;
+    cursor: pointer;
+}
+
+.portofolio-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+}
+
+.portofolio-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    filter: grayscale(100%);
+    transition: filter .3s;
+}
+
+.portofolio-item:hover img {
+    filter: grayscale(0%);
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.8);
+    backdrop-filter: blur(10px);
+    animation: fadeIn .5s ease;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    max-width: 90vw;
+    max-height: 90vh;
+    animation: zoomIn .5s ease forwards;
+}
+
+.modal-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    filter: none;
+}
+
+.close {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    color: #fff;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    background: rgba(0,0,0,.5);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .3s;
+}
+
+.close:hover {
+    background: rgba(0,0,0,.8);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+    from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* CONTACT FORM */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+    width: 100%;
+}
+
+.contact-form input, .contact-form textarea, .contact-form button {
+    padding: 0.5rem;
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
+    background: transparent;
+    color: var(--text-color);
+}
+
+.contact-form button {
+    cursor: pointer;
+    transition: background .3s;
+}
+
+.contact-form button:hover {
+    background: var(--text-color);
+    color: var(--bg-gradient);
+}
+
+/* SUCCESS MESSAGE */
+.success-message {
+    display: none;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: var(--card-bg);
+    border-radius: 10px;
+    text-align: center;
+    animation: bounceIn 1s ease;
+}
+
+.success-message h3 {
+    margin: 0;
+    font-size: 2rem;
+    color: #4CAF50;
+}
+
+.success-message p {
+    margin: 0.5rem 0 0;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* PARTICLES */
+#particles-js {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+}
+</style>
+</head>
+
+<body>
+<div id="particles-js"></div>
+
+<nav>
+<ul>
+<li><a href="#home">Home</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#portofolio">Portofolio</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+
+<button id="theme-toggle" aria-label="Toggle Theme">
+<svg id="theme-icon" viewBox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+</button>
+</nav>
+
+<section id="home" class="parallax home">
+<h1 id="typing-home" class="typing">Hello, i'm Ali Nurrochim</h1>
+<p>Discover my work with smooth animations and modern elegance.</p>
+</section>
+
+<section id="about" class="parallax about">
+<h2 id="typing-about" class="typing">About Me</h2>
+<p>i am a student and also the chairman of the student council of SMK N1 WIROSARI 2025-2026.</p>
+</section>
+
+<section id="portofolio" class="parallax portofolio">
+<h2 id="typing-portofolio" class="typing">My Portofolio</h2>
+<div class="portofolio-container">
+<div class="portofolio-item" data-img="https://4kwallpapers.com/images/walls/thumbs_3t/23027.jpg" data-desc="Anime Character">
+<img src="https://4kwallpapers.com/images/walls/thumbs_3t/23027.jpg" alt="Anime Character">
+<p>Anime Character</p>
+</div>
+<div class="portofolio-item" data-img="https://4kwallpapers.com/images/walls/thumbs_3t/24150.jpg" data-desc="Landscape Art">
+<img src="https://4kwallpapers.com/images/walls/thumbs_3t/24150.jpg" alt="Duo The Best">
+<p>Duo The Best</p>
+</div>
+<div class="portofolio-item" data-img="https://4kwallpapers.com/images/walls/thumbs_3t/18710.jpg" data-desc="Mecha Design">
+<img src="https://4kwallpapers.com/images/walls/thumbs_3t/18710.jpg" alt="First Anime">
+<p>First Anime</p>
+</div>
+<div class="portofolio-item" data-img="https://4kwallpapers.com/images/walls/thumbs_3t/24356.jpg" data-desc="Fantasy Scene">
+<img src="https://4kwallpapers.com/images/walls/thumbs_3t/24356.jpg" alt="Favorite character">
+<p>Fantasy Scene</p>
+</div>
+<div class="portofolio-item" data-img="https://4kwallpapers.com/images/walls/thumbs_3t/11464.jpg" data-desc="Abstract Art">
+<img src="https://4kwallpapers.com/images/walls/thumbs_3t/11464.jpg" alt="I Hate This">
+<p>I Hate This</p>
+</div>
+</div>
+</section>
+
+<section id="services" class="parallax services">
+<h2 id="typing-services" class="typing">Services</h2>
+<p>singkat saja pengen jadi animator skill palingan main mobile legend sama catur sih.</p>
+</section>
+
+<section id="contact" class="parallax contact">
+<h2 id="typing-contact" class="typing">Contact Me</h2>
+<form class="contact-form" id="contactForm" action="#" method="post">
+<input type="text" name="name" placeholder="Your Name" required>
+<input type="email" name="email" placeholder="Your Email" required>
+<textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+<button type="submit">Send Message</button>
+</form>
+<div id="successMessage" class="success-message">
+<h3>Message Sent!</h3>
+<p>Thank you for reaching out. I'll get back to you soon.</p>
+</div>
+</section>
+
+<!-- Modal -->
+<div id="imageModal" class="modal">
+<div class="modal-content">
+<span class="close">&times;</span>
+<img id="modalImg" src="" alt="">
+<p id="modalDesc"></p>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+/* PARTICLES */
+particlesJS('particles-js',{
+particles:{
+number:{value:40, density:{enable:true, value_area:800}},
+color:{value:'#888'},
+size:{value:3,random:true},
+line_linked:{enable:true,color:'#888',opacity:0.4},
+move:{enable:true,speed:2}
+}
+});
+
+/* THEME TOGGLE */
+const toggle = document.getElementById('theme-toggle');
+const icon = document.getElementById('theme-icon');
+const body = document.body;
+
+function setDarkIcon() {
+    icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+}
+
+function setLightIcon() {
+    icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+}
+
+toggle.addEventListener('click', () => {
+    if (body.getAttribute('data-theme') === 'light') {
+        body.removeAttribute('data-theme');
+        setDarkIcon();
+    } else {
+        body.setAttribute('data-theme', 'light');
+        setLightIcon();
+    }
+});
+
+/* TYPING ANIMATION */
+function typeWriter(element, text, speed = 100) {
+    let i = 0;
+    element.textContent = '';
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
+
+const homeText = "Hello, i'm Ali Nurrochim";
+const aboutText = "About Me";
+const portofolioText = "My Portofolio";
+const servicesText = "Services";
+const contactText = "Contact Me";
+
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                const h = entry.target.querySelector('h1, h2');
+                if (h && h.id) {
+                    const text = eval(h.id.replace('typing-', '') + 'Text');
+                    typeWriter(h, text);
+                }
+                entry.target.querySelectorAll('p').forEach((p, i) => {
+                    setTimeout(() => p.classList.add('animate'), i * 300);
+                });
+            }
+        });
+    }, { threshold: 0.25 });
+
+    document.querySelectorAll('section').forEach(s => observer.observe(s));
+});
+
+/* SMOOTH SCROLL */
+document.querySelectorAll('nav a').forEach(a => {
+    a.onclick = e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+    };
+});
+
+/* MODAL ANIMATION */
+const modal = document.getElementById('imageModal');
+const modalImg = document.getElementById('modalImg');
+const modalDesc = document.getElementById('modalDesc');
+const closeBtn = document.querySelector('.close');
+
+document.querySelectorAll('.portofolio-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const imgSrc = item.getAttribute('data-img');
+        const desc = item.getAttribute('data-desc');
+        modalImg.src = imgSrc;
+        modalDesc.textContent = desc;
+        modal.style.display = 'block';
+    });
+});
+
+closeBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+/* FORM SUBMIT ANIMATION */
+const form = document.getElementById('contactForm');
+const successMessage = document.getElementById('successMessage');
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // Simulate form submission (in real app, send to server)
+    setTimeout(() => {
+        successMessage.style.display = 'block';
+        // Scroll to the success message
+        successMessage.scrollIntoView({ behavior: 'smooth' });
+        // Trigger confetti animation
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+        // Hide message after 5 seconds
+        setTimeout(() => {
+            successMessage.style.display = 'none';
+        }, 5000);
+    }, 1000); // Simulate delay
+});
+</script>
+</body>
+</html>
