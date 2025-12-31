@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elegant Portfolio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Added Font Awesome for icons -->
+<style>
+:root {
+    --bg-gradient: linear-gradient(135deg, #000 0%, #808080 100%);
+    --text-color: #fff;
+    --nav-bg: rgba(0,0,0,.9);
+    --card-bg: rgba(255,255,255,.1);
+    --accent-color: #ff6b6b;
+}
+
+[data-theme="light"] {
+    --bg-gradient: linear-gradient(135deg, #f0f0f0 0%, #d0d0d0 100%);
+    --text-color: #222;
+    --nav-bg: rgba(255,255,255,.9);
+    --card-bg: rgba(0,0,0,.1);
+    --accent-color: #4ecdc4;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    transition: background .5s, color .5s;
+    overflow-x: hidden;
+}
+
+/* LOADING SCREEN */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-gradient);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 1s ease-out;
+}
+
+#loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader {
+    border: 8px solid rgba(255,255,255,.3);
+    border-top: 8px solid var(--accent-color);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* NAVBAR */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1rem 2rem;
+    background: var(--nav-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li { margin-right: 1.5rem; }
+
+nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color .3s;
+}
+
+nav a:hover, nav a:focus {
+    color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+/* THEME TOGGLE */
+#theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: color .3s;
+}
+
+#theme-toggle:hover, #theme-toggle:focus {
+    color: var(--accent-color);
+    transform: rotate(180deg);
+}
+
+#theme-toggle svg {
+    width: 28px;
+    height: 28px;
+    stroke: currentColor;
+    fill: none;
+}
+
+/* SECTION */
+section {
+    height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: 1s ease;
+}
+
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* PARALLAX */
+.parallax {
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(100%);
+    position: relative;
+}
+
+.parallax::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 1;
+}
+
+.parallax > * {
+    position: relative;
+    z-index: 2;
+}
+
+@media(max-width:768px){
+    .parallax { background-attachment: scroll; }
+    .parallax { background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Tambahkan ini */
+    filter: grayscale(100%);
+    position: relative;
+}
+}
+
+/* BACKGROUNDS */
+.home { background-image:url('https://source.unsplash.com/featured/?anime,city'); }
+.about { background-image:url('https://source.unsplash.com/featured/?anime,portrait'); }
+.portfolio { background-image:url('https://source.unsplash.com/featured/?anime,art'); }
+.services { background-image:url('https://source.unsplash.com/featured/?anime,technology'); }
+.skills { background-image:url('https://source.unsplash.com/featured/?anime,skills'); }
+.contact { background-image:url('https://source.unsplash.com/featured/?anime,nature'); }
+
+/* TYPING */
+.typing {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid currentColor;
+    animation: blink-caret 1s step-end infinite;
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: currentColor; }
+}
+
+h1, h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* TEXT */
+p {
+    max-width: 600px;
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: 1s ease;
+}
+
+p.animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* STATS COUNTER */
+.stats {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 800px;
+    margin-top: 2rem;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat h3 {
+    font-size: 2rem;
+    margin: 0;
+    color: var(--accent-color);
+}
+
+.stat p {
+    margin: 0.5rem 0;
+}
+
+/* PORTFOLIO HORIZONTAL */
+.portfolio-container {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding: 1rem;
+    max-width: 90vw;
+    scroll-snap-type: x mandatory;
+}
+
+.portfolio-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.portfolio-container::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.4);
+    border-radius: 10px;
+}
+
+.portfolio-item {
+    min-width: 280px;
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 10px;
+    transition: transform .3s, box-shadow .3s;
+    scroll-snap-align: start;
+    cursor: pointer;
+}
+
+.portfolio-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+}
+
+.portfolio-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    filter: grayscale(100%);
+    transition: filter .3s;
+}
+
+.portfolio-item:hover img {
+    filter: grayscale(0%);
+}
+
+/* RIPPLE EFFECT ON PORTFOLIO ITEM CLICK */
+.portfolio-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.portfolio-item::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+    pointer-events: none;
+}
+
+.portfolio-item:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* SKILLS */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    max-width: 800px;
+    width: 100%;
+}
+
+.skill {
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform .3s;
+}
+
+.skill:hover {
+    transform: translateY(-10px);
+}
+
+.skill i {
+    font-size: 2rem;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.8);
+    backdrop-filter: blur(10px);
+    animation: fadeIn .5s ease;
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    max-width: 90vw;
+    max-height: 90vh;
+    animation: zoomIn .5s ease forwards;
+}
+
+.modal-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    filter: none;
+}
+
+.close {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    color: #fff;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    background: rgba(0,0,0,.5);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .3s;
+}
+
+.close:hover {
+    background: rgba(0,0,0,.8);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+    from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* ANIMATED MODAL DESCRIPTION */
+#modalDesc {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 1rem;
+    color: var(--text-color);
+}
+
+#modalDesc.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* CONTACT FORM */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+    width: 100%;
+}
+
+.contact-form input, .contact-form textarea, .contact-form button {
+    padding: 0.5rem;
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
+    background: transparent;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.contact-form button {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-form button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.contact-form button:hover::before {
+    left: 100%;
+}
+
+.contact-form input:focus, .contact-form textarea:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+}
+
+.contact-form button:hover {
+    background: var(--accent-color);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.contact-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* SUCCESS MESSAGE */
+.success-message {
+    display: none;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: var(--card-bg);
+    border-radius: 10px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.success-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.success-message h3 {
+    margin: 0;
+    font-size: 2rem;
+    color: #4CAF50;
+}
+
+.success-message p {
+    margin: 0.5rem 0 0;
+}
+
+/* LOADING SPINNER FOR BUTTON */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+/* PARTICLES */
+#particles-js {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+}
+
+/* FOOTER */
+footer {
+    padding: 2rem;
+    background: var(--nav-bg);
+    text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.social-links a {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    transition: color .3s, transform .3s;
+}
+
+.social-links a:hover {
+    color: var(--accent-color);
+    transform: scale(1.2);
+}
+
+/* AUDIO CONTROLS */
+#audio-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+    background: var(--card-bg);
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform .3s;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+#audio-controls:hover {
+    transform: scale(1.1);
+}
+
+#audio-controls i {
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+/* SCROLL PROGRESS INDICATOR */
+#scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background: var(--accent-color);
+    z-index: 1000;
+    transition: width 0.3s ease;
+}
+
+/* BACK TO TOP BUTTON */
+#back-to-top {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 100;
+}
+#back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+#back-to-top:hover {
+    transform: scale(1.1);
+}
+
+</style>
+</head>
+
+<body>
+<div id="particles-js"></div>
+
+<div id="loading">
+    <div class="loader"></div>
+</div>
+
+<nav>
+<ul>
+<li><a href="#home">Home</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#portfolio">Portfolio</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#skills">Skills</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+
+<button id="theme-toggle" aria-label="Toggle Theme">
+<svg id="theme-icon" viewBox="0 0 24 24">
+<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+</svg>
+</button>
+</nav>
+
+<section id="home" class="parallax home">
+<h1 id="typing-home" class="typing">Hello, i'm Ali Nurrochim</h1>
+<p>Discover my work with smooth animations and modern elegance.</p>
+</section>
+
+<section id="about" class="parallax about">
+<h2 id="typing-about" class="typing">About Me</h2>
+<p>i am a student and also the chairman of the student council of SMK N1 WIROSARI 2025-2026.</p>
+<div class="stats">
+    <div class="stat">
+        <h3 id="projects-count">0</h3>
+        <p>Projects Completed</p>
+    </div>
+    <div class="stat">
+        <h3 id="years-count">0</h3>
+        <p>Years Experience</p>
+    </div>
+    <div class="stat">
+        <h3 id="clients-count">0</h3>
+        <p>Happy Clients</p>
+    </div>
+</div>
+</section>
+
+<section id="portfolio" class="parallax portfolio">
+<h2 id="typing-portfolio" class="typing">My Portfolio</h2>
+<div class="portfolio-container">
+<div class="portfolio-item" data-img="https://4kwallpapers.com/images/walls/thumbs_3t/23027.jpg" data-desc="Anime Character - A detailed illustration of a popular anime character.">
+<img src="https://4kwallpapers.com/images/walls/thumbs_3t/23027.jpg" alt="Anime Character">
+<p>Anime Character</p>
+</div>
+<div class="portfolio-item" data-img="https://4kwallpapers.com/images/walls/thumbs_3t/24150.jpg" data-desc="Duo The Best - An epic scene featuring two powerful characters.">
+<img src="https://4kwallpapers.com/images/walls/thumbs_3t/24150.jpg" alt="Duo The Best">
+<p>Duo The Best</p>
+</div>
+<div class="portfolio-item" data-img="https://4kwallpapers.com/images/walls/thumbs_3t/18710.jpg" data-desc="First Anime - My first attempt at anime-style art.">
+<img src="https://4kwallpapers.com/images/walls/thumbs_3t/18710.jpg" alt="First Anime">
+<p>First Anime</p>
+</div>
+<div class="portfolio-item" data-img="https://4kwallpapers.com/images/walls/thumbs_3t/24356.jpg" data-desc="Favorite Character - A portrait of my favorite anime character.">
+<img src="https://4kwallpapers.com/images/walls/thumbs_3t/24356.jpg" alt="Favorite Character">
+<p>Favorite Character</p>
+</div>
+<div class="portfolio-item" data-img="https://4kwallpapers.com/images/walls/thumbs_3t/11464.jpg" data-desc="I Hate This - An abstract piece exploring emotions.">
+<img src="https://4kwallpapers.com/images/walls/thumbs_3t/11464.jpg" alt="I Hate This">
+<p>I Hate This</p>
+</div>
+<div class="portfolio-item" data-img="https://source.unsplash.com/featured/?anime,mecha" data-desc="Mecha Design - Futuristic robot design inspired by anime.">
+<img src="https://source.unsplash.com/featured/?anime,mecha" alt="Mecha Design">
+<p>Mecha Design</p>
+</div>
+<div class="portfolio-item" data-img="https://source.unsplash.com/featured/?anime,fantasy" data-desc="Fantasy World - A magical landscape from an anime series.">
+<img src="https://source.unsplash.com/featured/?anime,fantasy" alt="Fantasy World">
+<p>Fantasy World</p>
+</div>
+<div class="portfolio-item" data-img="https://source.unsplash.com/featured/?anime,action" data-desc="Action Scene - High-energy battle illustration.">
+<img src="https://source.unsplash.com/featured/?anime,action" alt="Action Scene">
+<p>Action Scene</p>
+</div>
+</div>
+</section>
+
+<section id="services" class="parallax services">
+<h2 id="typing-services" class="typing">Services</h2>
+<p>singkat saja pengen jadi animator skill palingan main mobile legend sama catur sih.</p>
+</section>
+
+<section id="skills" class="parallax skills">
+<h2 id="typing-skills" class="typing">My Skills</h2>
+<div class="skills-grid">
+<div class="skill">
+<i class="fas fa-palette"></i>
+<h3>Digital Art</h3>
+<p>Creating stunning anime-inspired illustrations.</p>
+</div>
+<div class="skill">
+<i class="fas fa-code"></i>
+<h3>Web Development</h3>
+<p>Building interactive websites with modern tech.</p>
+</div>
+<div class="skill">
+<i class="fas fa-gamepad"></i>
+<h3>Gaming</h3>
+<p>Expert in Mobile Legends and strategic games.</p>
+</div>
+<div class="skill">
+<i class="fas fa-chess"></i>
+<h3>Chess</h3>
+<p>Sharpening mind with strategic chess play.</p>
+</div>
+<div class="skill">
+<i class="fas fa-video"></i>
+<h3>Animation</h3>
+<p>Aspiring animator for anime and motion graphics.</p>
+</div>
+<div class="skill">
+<i class="fas fa-users"></i>
+<h3>Leadership</h3>
+<p>Leading student council with dedication.</p>
+</div>
+</section>
+
+<section id="contact" class="parallax contact">
+<h2 id="typing-contact" class="typing">Contact Me</h2>
+<form class="contact-form" id="contactForm" action="#" method="post">
+<input type="text" name="name" placeholder="Your Name" required>
+<input type="email" name="email" placeholder="Your Email" required>
+<textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+<button type="submit" id="submitBtn">
+    <span id="buttonText">Send Message</span>
+</button>
+</form>
+<div class="success-message" id="successMessage">
+    <h3>Message Sent!</h3>
+    <p>Thank you for reaching out. I'll get back to you soon.</p>
+</div>
+</section>
+
+<footer>
+<div class="social-links">
+<a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+<a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+<a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+<a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+<a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+</div>
+<p>&copy; 2023 Ali Nurrochim. All rights reserved.</p>
+</footer>
+
+<!-- Modal -->
+<div id="imageModal" class="modal">
+<div class="modal-content">
+<span class="close">&times;</span>
+<img id="modalImg" src="" alt="">
+<p id="modalDesc"></p>
+</div>
+</div>
+
+<div id="audio-controls" aria-label="Toggle Background Music">
+<i class="fas fa-music"></i>
+</div>
+
+<div id="scroll-progress"></div>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<button id="back-to-top" aria-label="Back to Top">
+    <i class="fas fa-arrow-up"></i>
+</button>
+<script>
+/* PARTICLES */
+particlesJS('particles-js',{
+particles:{
+number:{value:40, density:{enable:true, value_area:800}},
+color:{value:'#888'},
+size:{value:3,random:true},
+line_linked:{enable:true,color:'#888',opacity:0.4},
+move:{enable:true,speed:2}
+}
+});
+
+// LOADING SCREEN
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('loading').classList.add('hidden');
+    }, 2000);
+});
+
+/* THEME TOGGLE */
+const toggle = document.getElementById('theme-toggle');
+const icon = document.getElementById('theme-icon');
+const body = document.body;
+
+function setDarkIcon() {
+    icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+}
+
+function setLightIcon() {
+    icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+}
+
+toggle.addEventListener('click', () => {
+    if (body.getAttribute('data-theme') === 'light') {
+        body.removeAttribute('data-theme');
+        setDarkIcon();
+    } else {
+        body.setAttribute('data-theme', 'light');
+        setLightIcon();
+    }
+});
+
+// STATS COUNTER ANIMATION
+function animateCounter(id, target) {
+    let count = 0;
+    const element = document.getElementById(id);
+    const increment = target / 100;
+    const timer = setInterval(() => {
+        count += increment;
+        if (count >= target) {
+            count = target;
+            clearInterval(timer);
+        }
+        element.textContent = Math.floor(count);
+    }, 20);
+}
+
+// Trigger counters when about section is visible
+const aboutObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            animateCounter('projects-count', 15); // Example: 15 projects
+            animateCounter('years-count', 2); // Example: 2 years
+            animateCounter('clients-count', 10); // Example: 10 clients
+        }
+    });
+}, { threshold: 0.5 });
+aboutObserver.observe(document.getElementById('about'));
+
+// AUDIO CONTROLS
+const audioControl = document.getElementById('audio-controls');
+const audio = new Audio('https://pro.snapcdn.app/dl?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJodHRwczovL3YxNi1pZXMtbXVzaWMudGlrdG9rY2RuLmNvbS8zMzM1MzU1ODI5YWZlODcyOTkzZjYyODMwOTU3MmZjMi82OTVlNzljNS92aWRlby90b3MvdXNlYXN0MmEvdG9zLXVzZWFzdDJhLXZlLTI3NzQvb01qSXNBNmh4SW9nV3NBRURBeGZ1YVpoVXN6SFRXQjVid05kT0UvP2E9NTgzOTY1JmJ0aT1PVUJ6T1RnN1FHbzZPalpBTDNBakxUQXpZQ014TkROZyZjaD0wJmNyPTAmZHI9MCZlcj0wJmxyPWRlZmF1bHQmY2Q9MCU3QzAlN0MwJTdDMCZicj0xMjgmYnQ9NjQmZnQ9N25oOFo2OWNOeDhadXNiVUZTSmtINGVha2lEWHRzb1A1YVFFZVdCdWNpTEQxSW56Jm1pbWVfdHlwZT1hdWRpb19tcDQmcXM9MyZyYz1OamswTTJsa056TTVPR2MwT3pZek0wQnBNelp0YXpjNlptY3phRE16T0Rsa05FQTJNQzQxWWpOZVgxNHhOV0ZoWHpJeFlTTnhaekkyY2pSbmJURmdMUzFrWVMxemN3JTNEJTNEJnZ2cGw9MSZsPTIwMjUxMjMxMjMxODM3ODgzMzFBRTMxRTBEQTkxMjAwRUEmYnRhZz1lMDAwOTAwMDAmc2hwPWQwNWIxNGJkJnNoY3A9LSIsImZpbGVuYW1lIjoiU2F2ZVRpay5pb183NDc5MDA5OTk2MDY4NTA2ODg4Lm1wMyIsIm5iZiI6MTc2NzE5NDMxNywiZXhwIjoxNzY3MTk3OTE3LCJpYXQiOjE3NjcxOTQzMTd9.TJekhOZEMmzMlbcs-cSDuDqsRQ_SXnrChgqfZrujP-o'); // Example audio URL, replace with your own
+audio.loop = true;
+let isPlaying = false;
+
+audioControl.addEventListener('click', () => {
+    if (isPlaying) {
+        audio.pause();
+        audioControl.innerHTML = '<i class="fas fa-music"></i>';
+    } else {
+        audio.play();
+        audioControl.innerHTML = '<i class="fas fa-pause"></i>';
+    }
+    isPlaying = !isPlaying;
+});
+
+/* TYPING ANIMATION */
+function typeWriter(element, text, speed = 100) {
+    let i = 0;
+    element.textContent = '';
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
+
+const homeText = "Hello, i'm Ali Nurrochim";
+const aboutText = "About Me";
+const portfolioText = "My Portfolio";
+const skillsText = "My Skills";
+const servicesText = "Services";
+const contactText = "Contact Me";
+
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                const h = entry.target.querySelector('h1, h2');
+                if (h && h.id) {
+                    let text;
+                    switch (h.id) {
+                 case 'typing-home': text = homeText; break;
+                 case 'typing-about': text = aboutText; break;
+                 case 'typing-portfolio': text = portfolioText; break;
+                 case 'typing-skills': text = skillsText; break;
+                 case 'typing-services': text = servicesText; break;
+                 case 'typing-contact': text = contactText; break;
+                }
+                    typeWriter(h, text);
+                }
+                entry.target.querySelectorAll('p').forEach((p, i) => {
+                    setTimeout(() => p.classList.add('animate'), i * 300);
+                });
+            }
+        });
+    }, { threshold: 0.25 });
+
+    document.querySelectorAll('section').forEach(s => observer.observe(s));
+});
+
+/* SMOOTH SCROLL */
+document.querySelectorAll('nav a').forEach(a => {
+    a.onclick = e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+    };
+});
+
+/* MODAL ANIMATION */
+const modal = document.getElementById('imageModal');
+const modalImg = document.getElementById('modalImg');
+const modalDesc = document.getElementById('modalDesc');
+const closeBtn = document.querySelector('.close');
+
+document.querySelectorAll('.portfolio-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const imgSrc = item.getAttribute('data-img');
+        const desc = item.getAttribute('data-desc');
+        modalImg.src = imgSrc;
+        modalDesc.textContent = desc;
+        modal.style.display = 'block';
+        setTimeout(() => {
+            modalDesc.classList.add('show');
+        }, 300);
+        modalDesc.classList.remove('show');
+    });
+});
+
+closeBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+/* FORM SUBMIT ANIMATION */
+const form = document.getElementById('contactForm');
+const successMessage = document.getElementById('successMessage');
+const submitBtn = document.getElementById('submitBtn');
+const buttonText = document.getElementById('buttonText');
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // Disable button and show loading spinner
+    submitBtn.disabled = true;
+    buttonText.innerHTML = '<div class="spinner"></div>Sending...';
+    
+    // Simulate form submission (in real app, send to server)
+    setTimeout(() => {
+        // Reset button
+        submitBtn.disabled = false;
+        buttonText.textContent = 'Send Message';
+        
+        // Show success message with elegant animation
+        successMessage.style.display = 'block';
+        setTimeout(() => successMessage.classList.add('show'), 10);
+        
+        // Scroll to the success message smoothly
+        successMessage.scrollIntoView({ behavior: 'smooth' });
+        
+        // Hide message after 5 seconds
+        setTimeout(() => {
+            successMessage.classList.remove('show');
+            setTimeout(() => successMessage.style.display = 'none', 500);
+        }, 5000);
+    }, 2000); // Simulate delay (ubah sesuai kebutuhan)
+});
+
+// SCROLL PROGRESS INDICATOR
+window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = (scrollTop / docHeight) * 100;
+    document.getElementById('scroll-progress').style.width = scrollPercent + '%';
+});
+
+// BACK TO TOP BUTTON
+const backToTopBtn = document.getElementById('back-to-top');
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        backToTopBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+    }
+});
+backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+</script>
+</body>
+</html>
